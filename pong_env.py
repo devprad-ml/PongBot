@@ -6,7 +6,7 @@ State: It will be a continuous state as the agent will have to move according to
 Reward : +1 to hit the ball, -5 if it loses, +5 if it wins.'''
 
 import numpy as np
-
+import random
 # we are defining the objects and constants that will be present in the environment at all times
 class PongEnvironment:
     def __init__(self, width = 1024, height = 768, pad_h = 90, pad_w = 5, ball_rad = 5):
@@ -83,12 +83,14 @@ class PongEnvironment:
             and
             self.left_y <= self.ball_y <=self.left_y + self.pad_h):  # ball is in between paddle
             self.ball_vx *= -1.1
+            reward_left += 1
         
         elif(self.ball_x >= self.width -10 - self.pad_w 
              and 
              self.right_y <=self.ball_y <=self.right_y + self.pad_h
              ):
             self.ball_vx *= -1.1
+            reward_right += 1
         
         # capping max speed
         self.ball_vx = np.cip(self.ball_vx, -self.max_speed, self.max_speed)
@@ -101,13 +103,13 @@ class PongEnvironment:
         reward_right = 0
         #right wins
         if self.ball_x < 0:
-            reward_right = 1
-            reward_left = -1
+            reward_right = 5
+            reward_left = -5
             self.done = True
             # left wins
         elif self.ball_x > self.width:
-            reward_left = 1
-            reward_right = -1
+            reward_left = 5
+            reward_right = -5
             self.done = True
         
         return self.get_state(), reward_left, reward_right, self.done
