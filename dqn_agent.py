@@ -39,7 +39,7 @@ class DQNAgent:
         self.epsilon_decay = epsilon_decay
         self.min_epsilon = min_epsilon
 
-        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu'):
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
         # Q-Network
 
@@ -52,8 +52,26 @@ class DQNAgent:
         self.replay_buffer = deque(maxlen = 50000)
         self.batch_size = 64
     
-    # the actual learning will happen here. 
+     
 
+    # choose action with epsilon greedy policy
+
+    def select_action(self, state):
+        if random.random() < self.epsilon:
+            return random.randint(0, self.action_dim-1)  # explore
+        state = torch.FloatTensor(state).unsqueeze(0).to(self.device)
+
+        with torch.no_grad():
+            q_values = self.model(state)
+        
+        return q_values.argmax().item()
+    
+    # store transitions in replay buffer
+
+    def store_transition(self, state, action, reward, next_state, done):
+        self.replay_buffer.append(state, action, reward, next_state, done)
+
+# the actual learning will happen here.
     def train(self):
         if len(self.replay_buffer) < self.batch_size:
             return
