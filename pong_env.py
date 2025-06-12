@@ -16,11 +16,13 @@ class PongEnvironment:
         self.pad_w = pad_w
         self.ball_rad = ball_rad
         self.max_speed = 12
+        self.score_limit = 10    # pts needed to win a game
         self.reset()
 
     # func. to reset the environment
     
     def reset(self):
+        
         # resetting the paddles 
         self.left_y = self.height //2 - self.pad_h//2
         self.right_y = self.height //2 - self.pad_h//2
@@ -31,8 +33,16 @@ class PongEnvironment:
         self.ball_vy = np.random.choice([-2,2])
 
         # score
+        self.left_score = 0
+        self.right_score = 0
         self.done = False
         return self.get_state()
+    
+    def reset_ball(self):
+        self.ball_x = self.width//2
+        self.ball_y = self.height // 2
+        self.ball_vx = np.random.choice([-4,4])
+        self.ball_vy = np.random.choice([-2,2])
     
     # retrieving the state in an array
 
@@ -50,6 +60,8 @@ class PongEnvironment:
         ])
  # defining everything about the actions   
     def step(self, action_left, action_right):
+        reward_left = 0
+        reward_right = 0
         # defining paddle speed
         dy = 6
 
@@ -93,23 +105,26 @@ class PongEnvironment:
             reward_right += 1
         
         # capping max speed
-        self.ball_vx = np.cip(self.ball_vx, -self.max_speed, self.max_speed)
+        self.ball_vx = np.clip(self.ball_vx, -self.max_speed, self.max_speed)
         self.ball_vy = np.clip(self.ball_vy, -self.max_speed, self.max_speed)
 
 
         # scoring
 
-        reward_left = 0
-        reward_right = 0
+        
         #right wins
         if self.ball_x < 0:
+            self.right_score +=1
             reward_right = 5
             reward_left = -5
-            self.done = True
+            self.reset_ball()
             # left wins
         elif self.ball_x > self.width:
             reward_left = 5
             reward_right = -5
+            self.reset_ball()
+        
+        if self.left_score >= self.score_limit or self.right_score >= self.score_limit:
             self.done = True
         
         return self.get_state(), reward_left, reward_right, self.done
