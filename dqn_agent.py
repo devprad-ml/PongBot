@@ -69,7 +69,7 @@ class DQNAgent:
     # store transitions in replay buffer
 
     def store_transition(self, state, action, reward, next_state, done):
-        self.replay_buffer.append(state, action, reward, next_state, done)
+        self.replay_buffer.append((state, action, reward, next_state, done))
 
 # the actual learning will happen here.
     def train(self):
