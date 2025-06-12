@@ -112,7 +112,7 @@ class DQNAgent:
         
     
     def save_model(self, path):
-        torch.save(self.model.state.dict(), path)
+        torch.save(self.model.state_dict(), path)
 
     
     # load model weights from file
