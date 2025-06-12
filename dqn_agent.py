@@ -47,5 +47,64 @@ class DQNAgent:
         self.optimizer = optim.Adam(self.model.parameters(), lr = lr)
         self.criterion = nn.MSELoss()  # minimizes Temporal Difference error
 
+        # replay buffer
+
+        self.replay_buffer = deque(maxlen = 50000)
+        self.batch_size = 64
+    
+    # the actual learning will happen here. 
+
+    def train(self):
+        if len(self.replay_buffer) < self.batch_size:
+            return
+        
+        # get random batch from memory
+
+        batch = random.sample(self.replay_buffer, self.batch_size)
+        states, actions, rewards, next_states, dones = zip(*batch)
+
+        # converting parameters into tensors
+
+        states = torch.FloatTensor(states).to(self.device)
+        actions = torch.LongTensor(actions).unsqueeze(1).to(self.device)
+        rewards = torch.FloatTensor(rewards).unsqueeze(1).to(self.device)
+        next_states = torch.FloatTensor(next_states).to(self.device)
+        dones = torch.FloatTensor(dones).unsqueeze(1).to(self.device)
+
+        # get current Q values
+        q_values = self.model(states).gather(1, actions)
+
+        # calc. target Q values using Bellman equations
+
+        with torch.no_grad():
+            next_q_values = self.model(next_states).max(1, keepdim = True)[0]
+            target_q_values = rewards + (1-dones) * self.gamma * next_q_values
+
+        # calc. loss and update network
+
+        loss = self.criterion(q_values, target_q_values)
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
+
+        # decay epsilon after each training step
+
+        if self.epsilon > self.min_epsilon:
+            self.epsilon *= self.epsilon_decay
+        
+    
+    def save_model(self, path):
+        torch.save(self.model.state.dict(), path)
+
+    
+    # load model weights from file
+
+    def load_model(self, path):
+        self.model.load_state_dict(torch.load(path, map_location = self.device))
+        self.model.eval()
+
+
+
+        
         
         
