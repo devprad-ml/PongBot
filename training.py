@@ -59,7 +59,7 @@ def train(num_episodes = 1000):
     try:
 
 
-        for episode in range(num_episodes):
+        for episode in range(start_episode,num_episodes):
             state = env.reset()
             total_reward_left = 0
             total_reward_right = 0
