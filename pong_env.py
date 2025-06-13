@@ -65,7 +65,7 @@ class PongEnvironment:
         # defining paddle speed
         dy = 6
 
-        # making the left paddle mveo up and down
+        # making the left paddle move up and down
         if action_left ==1 and self.left_y > 0:
             self.left_y -= dy
         
