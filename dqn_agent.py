@@ -112,14 +112,20 @@ class DQNAgent:
         
     
     def save_model(self, path):
+        checkpoint = {
+        'model_state_dict': self.model.state_dict(),
+        'epsilon': self.epsilon,
+    }
         torch.save(self.model.state_dict(), path)
 
     
     # load model weights from file
 
     def load_model(self, path):
-        self.model.load_state_dict(torch.load(path, map_location = self.device))
+        checkpoint = torch.load(path, map_location=self.device)
+        self.model.load_state_dict(checkpoint['model_state_dict'])
         self.model.eval()
+        self.epsilon = checkpoint.get('epsilon', self.epsilon)
 
 
 
