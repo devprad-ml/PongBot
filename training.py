@@ -7,11 +7,11 @@ from dqn_agent import DQNAgent
 import os
 
 left_model_path = 'left_agent.pth'
-right_model_path = 'right_model.pth'
+right_model_path = 'right_agent.pth'
 meta_path = 'meta.txt'
 
 # saving checkpoint to not lose progress
-def save_checkpoint(left_agent, right_agent, episodes):
+def save_checkpoint(left_agent, right_agent, episode):
     left_agent.save_model(left_model_path)
     right_agent.save_model(right_model_path)
     with open(meta_path, "w") as f:
@@ -41,7 +41,7 @@ def load_checkpoint(left_agent, right_agent):
     
 
 
-def train(num_episodes = 10000):
+def train(num_episodes = 1000):
 # initializing the pong environment class
     env = PongEnvironment()
     state_dim = 6 
@@ -50,6 +50,10 @@ def train(num_episodes = 10000):
     # initializing the agents
     left_agent = DQNAgent(state_dim,action_dim)
     right_agent = DQNAgent(state_dim,action_dim)
+
+    # resume if the checkpoint exists
+
+    start_episode = load_checkpoint(left_agent, right_agent)
 
     # getting initial state
     try:
@@ -85,6 +89,8 @@ def train(num_episodes = 10000):
                 total_reward_right += reward_right
                 # print the episodes to check progress
             print(f"Episode{episode+1}/{num_episodes} - Left: {total_reward_left:.2f}, Right: {total_reward_right:.2f}")
+
+            
 
     except KeyboardInterrupt:
             print('\nTraining interrupted. Saving checkpoint...')
