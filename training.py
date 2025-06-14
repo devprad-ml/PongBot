@@ -5,6 +5,7 @@ import numpy as np
 from pong_env import PongEnvironment
 from dqn_agent import DQNAgent
 import os
+import csv
 
 left_model_path = 'left_agent.pth'
 right_model_path = 'right_agent.pth'
@@ -54,6 +55,21 @@ def train(num_episodes = 1000):
     # resume if the checkpoint exists
 
     start_episode = load_checkpoint(left_agent, right_agent)
+    os.makedirs("logs", exist_ok=True)
+    log_path = "logs/training_log.csv"
+    write_header = not os.path.exists(log_path)
+
+    log_file = open(log_path, mode='a', newline='')
+    csv_writer = csv.writer(log_file)
+
+    if write_header:
+        csv_writer.writerow([
+            "Episode", "Reward_Left", "Reward_Right",
+            "Epsilon_Left", "Epsilon_Right",
+            "Loss_Left", "Loss_Right",
+            "MaxQ_Left", "MaxQ_Right",
+            "Outcome"
+        ])
 
     # getting initial state
     try:
@@ -64,6 +80,11 @@ def train(num_episodes = 1000):
             total_reward_left = 0
             total_reward_right = 0
             done = False
+
+            losses_left = []
+            losses_right = []
+            qvals_left = []
+            qvals_right = []
 
             while not done:
                 action_left = left_agent.select_action(state)
@@ -89,6 +110,30 @@ def train(num_episodes = 1000):
                 total_reward_right += reward_right
                 # print the episodes to check progress
             print(f"Episode{episode+1}/{num_episodes} - Left: {total_reward_left:.2f}, Right: {total_reward_right:.2f}")
+
+            avg_loss_left = np.mean(losses_left) if losses_left else 0.0
+            avg_loss_right = np.mean(losses_right) if losses_right else 0.0
+            avg_q_left = np.mean(qvals_left) if qvals_left else 0.0
+            avg_q_right = np.mean(qvals_right) if qvals_right else 0.0
+
+            # Determine outcome
+            if total_reward_left > total_reward_right:
+                outcome = "Left Wins"
+            elif total_reward_left < total_reward_right:
+                outcome = "Right Wins"
+            else:
+                outcome = "Draw"
+
+
+            csv_writer.writerow([
+                episode + 1,
+                total_reward_left, total_reward_right,
+                left_agent.epsilon, right_agent.epsilon,
+                avg_loss_left, avg_loss_right,
+                avg_q_left, avg_q_right,
+                outcome
+])
+
 
             
 

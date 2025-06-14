@@ -110,13 +110,15 @@ class DQNAgent:
         if self.epsilon > self.min_epsilon:
             self.epsilon *= self.epsilon_decay
         
+        return loss.item(), q_values.max().item()
+        
     
     def save_model(self, path):
         checkpoint = {
         'model_state_dict': self.model.state_dict(),
         'epsilon': self.epsilon,
     }
-        torch.save(self.model.state_dict(), path)
+        torch.save(checkpoint, path)
 
     
     # load model weights from file
