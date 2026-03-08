@@ -50,7 +50,7 @@ class DQNAgent:
         # replay buffer
 
         self.replay_buffer = deque(maxlen = 50000)
-        self.batch_size = 64
+        self.batch_size = 32
     
      
 
