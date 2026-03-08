@@ -1,6 +1,6 @@
 # PongBot 🏓
 
-A Pong AI agent trained from scratch using Deep Q-Learning (DQN) in PyTorch. Two agents trained by playing against each other  no human demonstrations, no pre-built environments. Play against it yourself.
+A Pong AI agent trained from scratch using Deep Q-Learning (DQN) in PyTorch. Two agents trained by playing against each other, no human demonstrations, no pre-built environments. Play against it yourself.
 
 Built by [Pradyumnn](https://github.com/devprad-ml)
 
@@ -19,7 +19,7 @@ Built by [Pradyumnn](https://github.com/devprad-ml)
 
 ### The Problem
 
-Standard Pong has no pre-defined strategy. The agent has to figure out, purely from trial and error, that moving toward the ball is good and missing the ball is bad. This is a classic reinforcement learning problem  the agent learns by interacting with the environment and receiving rewards.
+Standard Pong has no pre-defined strategy. The agent has to figure out, purely from trial and error, that moving toward the ball is good and missing the ball is bad. This is a classic reinforcement learning problem. The agent learns by interacting with the environment and receiving rewards.
 
 ### Deep Q-Learning (DQN)
 
@@ -118,7 +118,7 @@ Both the left and right agents are trained simultaneously against each other. Th
 
 ## Training
 
-Two agents trained against each other for **258 episodes** using self-play. Training logs (episode rewards, epsilon values, loss, max Q-values, and outcome) are saved to `logs/training_log.csv` for analysis.
+Two agents trained against each other for **258 episodes/1000** using self-play. Training logs (episode rewards, epsilon values, loss, max Q-values, and outcome) are saved to `logs/training_log.csv` for analysis.
 
 Training supports **checkpointing**  if interrupted, it saves both models and resumes from the last episode automatically.
 
@@ -182,7 +182,7 @@ Training saves checkpoints automatically. If interrupted, it resumes from where 
 
 ## What I Learned
 
-- Implementing DQN from scratch forces you to understand every component  replay buffer, Bellman targets, epsilon decay rather than letting a library abstract it away
-- Self-play is a surprisingly effective training signal. The agents only need each other  no human demonstrations or hardcoded strategies
-- Reward shaping matters. An early version with only win/lose rewards (+5/-5) trained much slower because the agent got no feedback for the majority of frames where no point was scored. Adding +1 per hit significantly sped up learning
-- Normalization of the state vector is not optional  without it, training was unstable and the agents failed to converge
+- Implementing DQN from scratch forces you to understand every component; replay buffer, Bellman targets, epsilon decay rather than letting a library abstract it away
+- Self-play is a surprisingly effective training signal. The agents only need each other. No human demonstrations or hardcoded strategies
+- Reward shaping matters. An early version with only win/lose rewards (+5/-5) trained much slower because the agent got no feedback for the majority of frames where no point was scored. Adding +1 per hit significantly sped up learning.
+- Normalization of the state vector is not optional. Without it, training was unstable and the agents failed to converge
