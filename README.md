@@ -1,6 +1,6 @@
 # PongBot 🏓
 
-A Pong AI agent trained from scratch using Deep Q-Learning (DQN) in PyTorch. Two agents trained by playing against each other — no human demonstrations, no pre-built environments. Play against it yourself.
+A Pong AI agent trained from scratch using Deep Q-Learning (DQN) in PyTorch. Two agents trained by playing against each other  no human demonstrations, no pre-built environments. Play against it yourself.
 
 Built by [Pradyumnn](https://github.com/devprad-ml)
 
@@ -19,11 +19,11 @@ Built by [Pradyumnn](https://github.com/devprad-ml)
 
 ### The Problem
 
-Standard Pong has no pre-defined strategy. The agent has to figure out, purely from trial and error, that moving toward the ball is good and missing the ball is bad. This is a classic reinforcement learning problem — the agent learns by interacting with the environment and receiving rewards.
+Standard Pong has no pre-defined strategy. The agent has to figure out, purely from trial and error, that moving toward the ball is good and missing the ball is bad. This is a classic reinforcement learning problem  the agent learns by interacting with the environment and receiving rewards.
 
 ### Deep Q-Learning (DQN)
 
-Q-Learning is an RL algorithm where the agent learns a **Q-value** for every (state, action) pair — essentially, "how good is it to take this action in this situation?"
+Q-Learning is an RL algorithm where the agent learns a **Q-value** for every (state, action) pair which in layman's terms mean, "how good is it to take this action in this situation?"
 
 The problem with classic Q-Learning is that it stores Q-values in a table, which breaks down when the state space is continuous (like this game, where the ball and paddles can be at any position). **Deep Q-Learning** solves this by replacing the table with a neural network that approximates Q-values.
 
@@ -37,7 +37,7 @@ Where:
 - `s` = current state
 - `a` = action taken
 - `reward` = immediate reward received
-- `γ` (gamma) = discount factor — how much the agent values future rewards
+- `γ` (gamma) = discount factor, i.e how much the agent values future rewards
 - `s'` = next state after taking the action
 
 At each training step, the network's prediction is compared to this target and the error (loss) is minimized using backpropagation.
@@ -112,7 +112,7 @@ Epsilon starts at 1.0 (fully random) and decays by a factor of 0.995 per step do
 
 ### Self-Play Training
 
-Both the left and right agents are trained simultaneously against each other. This creates an **auto-curriculum** — as one agent improves, it provides a harder opponent for the other, pushing both to keep improving without any human-designed difficulty progression.
+Both the left and right agents are trained simultaneously against each other. This creates an **auto-curriculum** as one agent improves, it provides a harder opponent for the other, pushing both to keep improving without any human-designed difficulty progression.
 
 ---
 
@@ -120,7 +120,7 @@ Both the left and right agents are trained simultaneously against each other. Th
 
 Two agents trained against each other for **258 episodes** using self-play. Training logs (episode rewards, epsilon values, loss, max Q-values, and outcome) are saved to `logs/training_log.csv` for analysis.
 
-Training supports **checkpointing** — if interrupted, it saves both models and resumes from the last episode automatically.
+Training supports **checkpointing**  if interrupted, it saves both models and resumes from the last episode automatically.
 
 ### Hyperparameters
 
@@ -182,7 +182,7 @@ Training saves checkpoints automatically. If interrupted, it resumes from where 
 
 ## What I Learned
 
-- Implementing DQN from scratch forces you to understand every component — replay buffer, Bellman targets, epsilon decay — rather than letting a library abstract it away
-- Self-play is a surprisingly effective training signal. The agents only need each other — no human demonstrations or hardcoded strategies
+- Implementing DQN from scratch forces you to understand every component  replay buffer, Bellman targets, epsilon decay rather than letting a library abstract it away
+- Self-play is a surprisingly effective training signal. The agents only need each other  no human demonstrations or hardcoded strategies
 - Reward shaping matters. An early version with only win/lose rewards (+5/-5) trained much slower because the agent got no feedback for the majority of frames where no point was scored. Adding +1 per hit significantly sped up learning
-- Normalization of the state vector is not optional — without it, training was unstable and the agents failed to converge
+- Normalization of the state vector is not optional  without it, training was unstable and the agents failed to converge
