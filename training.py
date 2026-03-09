@@ -42,7 +42,7 @@ def load_checkpoint(left_agent, right_agent):
     
 
 
-def train(num_episodes = 1000):
+def train(num_episodes = 5000):
 # initializing the pong environment class
     env = PongEnvironment()
     state_dim = 6 
