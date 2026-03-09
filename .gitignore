@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+venv/
+.venv/
+env/
+
+# PyTorch / ML
+*.pth
+*.pt
+*.onnx
+*.onnx.data
+logs/
+
+# Node / Next.js
+web/node_modules/
+web/.next/
+web/out/
+web/.env
+web/.env.local
+web/.env*.local
+web/npm-debug.log*
+web/yarn-debug.log*
+web/yarn-error.log*
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
